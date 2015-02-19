@@ -5,6 +5,9 @@ A `PlainEditable` [React](http://facebook.github.io/react) component which uses
 
 ## [Live Demo](http://insin.github.io/react-plain-editable/)
 
+You can also see `PlainEditable` in action in
+[ideas-md](http://insin.github.io/ideas-md), a float-to-the-top ideas log app.
+
 ## Install
 
 ### npm
