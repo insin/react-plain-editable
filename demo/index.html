@@ -82,13 +82,13 @@ var App = React.createClass({
             uses <code>&lt;br&gt;</code> for linebreaks and strips all other HTML tags.
           </p>
           <p>
-            The return value is expected to be usable directly in the contentEditable
+            "Plain(ish)"? The return value is expected to be usable directly in the contentEditable
             again later, so <code>&lt;br&gt;</code> tags and any encoded entities such
             as <code>&amp;nbsp;</code> are retained.
           </p>
         </li>
         <li><p>
-          Leading trailing whitespance and HTML which would cause whitespace is trimmed in the
+          Leading &amp; trailing whitespance and HTML which would cause whitespace is trimmed in the
           normalised HTML returned.
         </p></li>
         <li><p>
