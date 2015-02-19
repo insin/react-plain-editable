@@ -3,6 +3,14 @@
 A `PlainEditable` [React](http://facebook.github.io/react) component which uses
 `contentEditable` to edit plain(ish) text.
 
+**Note:** `contentEditable` seems like an inconsistent mess across browsers and
+this has only been tested in the latest stable Firefox (35), Chrome (40) and
+Internet Explorer (11) with a `<div>` container with an unaltered CSS `display`
+style.
+
+Pull requests and compatilbility issue reports to help improve this component
+are welcome!
+
 ## [Live Demo](http://insin.github.io/react-plain-editable/)
 
 You can also see `PlainEditable` in action in
@@ -35,6 +43,16 @@ contents as an `html` prop.
 
 ```html
 <PlainEditable onBlur={this._onBlur} html={this.state.html}/>
+```
+
+For Internet Explorer (and any other browser which generates `<p>` elements in a
+`contentEditable`), you must set up a CSS rule to make `<p>` elements have the
+same visual effect as a `<br>`:
+
+```css
+.PlainEditable p {
+  margin: 0;
+}
 ```
 
 ## API
