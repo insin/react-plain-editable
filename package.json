@@ -1,6 +1,6 @@
 {
   "name": "react-plain-editable",
-  "description": "Use contentEditable for plain text editing",
+  "description": "React component for editing plain(ish) text via contentEditable",
   "version": "1.0.0",
   "main": "./lib/index.js",
   "standalone": "PlainEditable",
