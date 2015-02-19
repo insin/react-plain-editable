@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>react-plain-editable</title>
+  <script src="http://fb.me/react-with-addons-0.12.2.js"></script>
+  <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+  <script src="../dist/react-plain-editable.js"></script>
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto">
+  <style>
+   html {
+    padding: 1em;
+    font-family: Roboto, sans-serif;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .wrap {
+    border: 1px solid;
+  }
+  .PlainEditable {
+    display: block;
+  }
+  .PlainEditable p {
+    margin: 0; /* IE */
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+  }
+  .valueWrap {
+    border: 1px solid;
+    min-height: 1em;
+  }
+
+  footer {
+    margin-top: 20px;
+    text-align: center;
+  }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script type="text/jsx;harmony=true">void function() { 'use strict';
+
+var App = React.createClass({
+  getInitialState() {
+    return {
+      blurValue: '',
+      changeValue: ''
+    }
+  },
+
+  _onBlur(e, blurValue) {
+    this.setState({blurValue})
+  },
+
+  _onChange(e, changeValue) {
+    this.setState({changeValue})
+  },
+
+  render() {
+    return <div className="App">
+      <h2><a href="https://github.com/insin/react-plain-editable">PlainEditable</a></h2>
+
+      <p>
+        A <a href="http://facebook.github.io/react">React</a> component which
+        attempts to make it easier to use <code>contentEditable</code> to edit
+        plain(ish) text.
+      </p>
+
+      <h3>Features</h3>
+      <ul>
+        <li><p>
+          Implemented as an "uncontrolled" component &mdash; i.e. changes to the
+          initial <code>html</code> prop passed by the parent component will not be reflected.
+        </p></li>
+        <li>
+          <p>
+            <code>onChange(e, html)</code> and <code>onBlur(e, html)</code> callback props fire when
+            you'd expect and receive a normalised representation of
+            the <code>contentEditable</code>'s <code>innerHTML</code> which
+            uses <code>&lt;br&gt;</code> for linebreaks and strips all other HTML tags.
+          </p>
+          <p>
+            The return value is expected to be usable directly in the contentEditable
+            again later, so <code>&lt;br&gt;</code> tags and any encoded entities such
+            as <code>&amp;nbsp;</code> are retained.
+          </p>
+        </li>
+        <li><p>
+          Leading trailing whitespance and HTML which would cause whitespace is trimmed in the
+          normalised HTML returned.
+        </p></li>
+        <li><p>
+          If a <code>placeholder</code> prop is provided, text in the <code>contentEditable</code>
+          will be automatically selected <code>onFocus</code> when its <code>innerHTML</code> matches
+          the given value.
+        </p></li>
+        <li><p>
+          Attempts to workaround collapsing of empty <code>contentEditables</code> by various
+          browsers.
+        </p></li>
+      </ul>
+
+      <h3>Caveats</h3>
+      <ul>
+        <li>
+          <p>You must set up some CSS to make paragraphs act like linebreaks in Internet Explorer:</p>
+          <pre><code>{'.PlainEditable p { margin: 0; }'}</code></pre>
+        </li>
+        <li><p>
+          <code>contentEditable</code> is an inconsistent mess across browsers and this has only been
+          tested in the latest stable Firefox (35), Chrome (40) and Internet Explorer (11) with
+          a <code>&lt;div&gt;</code> container using the default <code>display: block</code>.
+          Good luck!
+        </p></li>
+      </ul>
+
+      <h3>Demo</h3>
+      <label><code>&lt;PlainEditable
+  onBlur={'{this._onBlur}'} onChange={'{this._onChange}'} html="One&lt;br&gt;&lt;br&gt;Two&lt;br&gt;&lt;br&gt;Three"&gt;</code></label>
+      <div className="wrap">
+        <PlainEditable
+          onBlur={this._onBlur}
+          onChange={this._onChange}
+          html="One<br><br>Two<br><br>Three"
+        />
+      </div>
+      <label><code>&lt;/PlainEditable&gt;</code></label>
+
+      <br/>
+
+      <div>
+        <label><code>onBlur(event, html)</code></label>
+        <div className="valueWrap">{this.state.blurValue}</div>
+      </div>
+
+      <br/>
+
+      <div>
+        <label><code>onChange(event, html)</code></label>
+        <div className="valueWrap">{this.state.changeValue}</div>
+      </div>
+
+      <footer><a href="https://github.com/insin/react-plain-editable">Source on GitHub</a></footer>
+    </div>
+  }
+})
+
+React.render(<App/>, document.getElementById('app'))
+
+}()</script>
+</body>
