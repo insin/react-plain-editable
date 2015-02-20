@@ -71,11 +71,14 @@ var PlainEditable = React.createClass({
   },
 
   _onInput(e) {
-    var html = normaliseContentEditableHTML(e.target.innerHTML)
-    if (html == DEFAULT_CONTENTEDITABLE_HTML) {
-      e.target.innerHTML = html
+    var innerHTML = e.target.innerHTML
+    if (!innerHTML) {
+      e.target.innerHTML = DEFAULT_CONTENTEDITABLE_HTML
     }
-    this.props.onChange(e, returnHTML(html))
+    if (this.props.onChange) {
+      var html = normaliseContentEditableHTML(innerHTML)
+      this.props.onChange(e, returnHTML(html))
+    }
   },
 
   _onKeyDown(e) {
@@ -138,9 +141,9 @@ var PlainEditable = React.createClass({
       {...props}
       className={'PlainEditable' + (className ? ' ' + className : '')}
       contentEditable
-      dangerouslySetInnerHTML={{__html: html}}
+      dangerouslySetInnerHTML={{__html: html || DEFAULT_CONTENTEDITABLE_HTML}}
       onBlur={onBlur && this._onBlur}
-      onInput={onChange && this._onInput}
+      onInput={this._onInput}
       onFocus={(onFocus || placeholder) && this._onFocus}
       onKeyDown={(onKeyDown || isIE) && this._onKeyDown}
       onKeyUp={(onKeyUp || isIE) && this._onKeyUp}
