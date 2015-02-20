@@ -42,7 +42,15 @@ function to get HTML contents back at the desired time, and provide any initial
 contents as an `html` prop.
 
 ```html
-<PlainEditable onBlur={this._onBlur} html={this.state.html}/>
+var Editor = React.createClass({
+  _onBlur(e, html) {
+    this.props.onChange(html)
+  },
+
+  render() {
+    <PlainEditable onBlur={this._onBlur} html={this.props.html}/>
+  }
+})
 ```
 
 For Internet Explorer (and any other browser which generates `<p>` elements in a
