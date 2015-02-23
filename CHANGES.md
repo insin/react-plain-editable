@@ -1,3 +1,5 @@
+## 1.1.0 / 2015-02-23
+
 Added an `autoFocus` prop to give focus to the `contentEditable` when the
 component first mounts.
 

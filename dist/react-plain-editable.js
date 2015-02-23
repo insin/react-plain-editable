@@ -1,5 +1,5 @@
 /*!
- * react-plain-editable 1.0.1 - https://github.com/insin/react-plain-editable
+ * react-plain-editable 1.1.0 - https://github.com/insin/react-plain-editable
  * MIT Licensed
  */
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.PlainEditable=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -50,6 +50,7 @@ function normaliseContentEditableHTML(html) {
 
 var PlainEditable = React.createClass({displayName: "PlainEditable",
   propTypes: {
+    autoFocus: React.PropTypes.bool,
     className: React.PropTypes.string,
     component: React.PropTypes.any,
     html: React.PropTypes.string,
@@ -68,6 +69,16 @@ var PlainEditable = React.createClass({displayName: "PlainEditable",
       placeholder: '',
       spellCheck: 'false'
     }
+  },
+
+  componentDidMount:function() {
+    if (this.props.autoFocus) {
+      this.focus()
+    }
+  },
+
+  focus:function() {
+    this.getDOMNode().focus()
   },
 
   _onBlur:function(e) {
@@ -139,9 +150,13 @@ var PlainEditable = React.createClass({displayName: "PlainEditable",
   render:function() {
     var $__0=
       
-              
+       
       
-      this.props,html=$__0.html,className=$__0.className,component=$__0.component,onBlur=$__0.onBlur,onChange=$__0.onChange,onFocus=$__0.onFocus,onKeyDown=$__0.onKeyDown,onKeyUp=$__0.onKeyUp,placeholder=$__0.placeholder,spellCheck=$__0.spellCheck,props=(function(source, exclusion) {var rest = {};var hasOwn = Object.prototype.hasOwnProperty;if (source == null) {throw new TypeError();}for (var key in source) {if (hasOwn.call(source, key) && !hasOwn.call(exclusion, key)) {rest[key] = source[key];}}return rest;})($__0,{html:1,className:1,component:1,onBlur:1,onChange:1,onFocus:1,onKeyDown:1,onKeyUp:1,placeholder:1,spellCheck:1})
+          
+      
+      
+      
+      this.props,autoFocus=$__0.autoFocus,className=$__0.className,component=$__0.component,html=$__0.html,onBlur=$__0.onBlur,onChange=$__0.onChange,onFocus=$__0.onFocus,onKeyDown=$__0.onKeyDown,onKeyUp=$__0.onKeyUp,placeholder=$__0.placeholder,spellCheck=$__0.spellCheck,props=(function(source, exclusion) {var rest = {};var hasOwn = Object.prototype.hasOwnProperty;if (source == null) {throw new TypeError();}for (var key in source) {if (hasOwn.call(source, key) && !hasOwn.call(exclusion, key)) {rest[key] = source[key];}}return rest;})($__0,{autoFocus:1,className:1,component:1,html:1,onBlur:1,onChange:1,onFocus:1,onKeyDown:1,onKeyUp:1,placeholder:1,spellCheck:1})
     return React.createElement(this.props.component, React.__spread({}, 
       props, 
       {className: 'PlainEditable' + (className ? ' ' + className : ''), 
