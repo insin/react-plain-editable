@@ -45,6 +45,7 @@ function normaliseContentEditableHTML(html) {
 
 var PlainEditable = React.createClass({
   propTypes: {
+    autoFocus: React.PropTypes.bool,
     className: React.PropTypes.string,
     component: React.PropTypes.any,
     html: React.PropTypes.string,
@@ -62,6 +63,12 @@ var PlainEditable = React.createClass({
       html: DEFAULT_CONTENTEDITABLE_HTML,
       placeholder: '',
       spellCheck: 'false'
+    }
+  },
+
+  componentDidMount() {
+    if (this.props.autoFocus) {
+      this.focus()
     }
   },
 
@@ -137,8 +144,12 @@ var PlainEditable = React.createClass({
 
   render() {
     var {
+      autoFocus,
+      className, component,
       html,
-      className, component, onBlur, onChange, onFocus, onKeyDown, onKeyUp, placeholder, spellCheck,
+      onBlur, onChange, onFocus, onKeyDown, onKeyUp,
+      placeholder,
+      spellCheck,
       ...props
     } = this.props
     return <this.props.component

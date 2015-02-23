@@ -92,6 +92,10 @@ has been implemented across various browsers.
 *Any props passed in addition to those documented below will be passed to the
 component created in `PlainEditable`'s `render()` method.*
 
+##### `autoFocus: Boolean`
+
+If `true` when the component mounts, the `contentEditable` will be given focus.
+
 ##### `className: String`
 
 An additional CSS class to append to the default `PlainEditable` CSS class.
