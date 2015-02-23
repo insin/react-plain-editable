@@ -43,6 +43,24 @@ function normaliseContentEditableHTML(html) {
   return html || DEFAULT_CONTENTEDITABLE_HTML
 }
 
+function selectElementText(el) {
+  setTimeout(function() {
+    var range
+    if (window.getSelection && document.createRange) {
+      range = document.createRange()
+      range.selectNodeContents(el)
+      var selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
+    }
+    else if (document.body.createTextRange) {
+      range = document.body.createTextRange()
+      range.moveToElementText(el)
+      range.select()
+    }
+  }, 1)
+}
+
 var PlainEditable = React.createClass({
   propTypes: {
     autoFocus: React.PropTypes.bool,
@@ -120,21 +138,7 @@ var PlainEditable = React.createClass({
     var {target} = e
     var selecting = false
     if (this.props.placeholder && target.innerHTML == this.props.placeholder) {
-      setTimeout(function() {
-        var range
-        if (window.getSelection && document.createRange) {
-          range = document.createRange()
-          range.selectNodeContents(target)
-          var selection = window.getSelection()
-          selection.removeAllRanges()
-          selection.addRange(range)
-        }
-        else if (document.body.createTextRange) {
-          range = document.body.createTextRange()
-          range.moveToElementText(target)
-          range.select()
-        }
-      }, 1)
+      selectElementText(target)
       selecting = true
     }
     if (this.props.onFocus) {
