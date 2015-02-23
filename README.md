@@ -152,4 +152,10 @@ you provide as a placeholder.
 Coinfig for the `contentEditable`'s `spellcheck` prop, which is disabled by
 default.
 
+#### Methods
+
+##### `focus()`
+
+Gives focus to the `contentEditable` DOM node.
+
 ## MIT Licensed

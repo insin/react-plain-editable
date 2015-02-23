@@ -65,6 +65,10 @@ var PlainEditable = React.createClass({
     }
   },
 
+  focus() {
+    this.getDOMNode().focus()
+  },
+
   _onBlur(e) {
     var html = normaliseContentEditableHTML(e.target.innerHTML)
     this.props.onBlur(e, returnHTML(html))
