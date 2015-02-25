@@ -81,7 +81,7 @@ var trimWhitespace = /^(?:\s|&nbsp;|<br[^>]*>)*|(?:\s|&nbsp;|<br[^>]*>)*$/g
  * trimming leading and trailing whitespace and causes of whitespace. The
  * resulting normalised HTML uses <br> for linebreaks.
  */
-function normaliseContentEditableHTML(html) {
+function normaliseContentEditableHTML(html, trim) {
   html = html.replace(initialBreaks, '$1\n\n')
              .replace(initialBreak, '$1\n')
              .replace(wrappedBreaks, '\n')
@@ -89,8 +89,12 @@ function normaliseContentEditableHTML(html) {
              .replace(breaks, '\n')
              .replace(allTags, '')
              .replace(newlines, '<br>')
-             .replace(trimWhitespace, '')
-  return html || DEFAULT_CONTENTEDITABLE_HTML
+
+  if (trim) {
+    html = html.replace(trimWhitespace, '')
+  }
+
+  return html
 }
 
 // =============================================================== Component ===
@@ -101,6 +105,7 @@ var PlainEditable = React.createClass({
     className: React.PropTypes.string,
     component: React.PropTypes.any,
     value: React.PropTypes.string,
+    noTrim: React.PropTypes.bool,
     onBlur: React.PropTypes.func,
     onChange: React.PropTypes.func,
     onFocus: React.PropTypes.func,
@@ -112,6 +117,7 @@ var PlainEditable = React.createClass({
   getDefaultProps() {
     return {
       component: 'div',
+      noTrim: false,
       placeholder: '',
       spellCheck: 'false',
       value: ''
@@ -129,7 +135,7 @@ var PlainEditable = React.createClass({
   },
 
   _onBlur(e) {
-    var html = normaliseContentEditableHTML(e.target.innerHTML)
+    var html = normaliseContentEditableHTML(e.target.innerHTML, !this.props.noTrim)
     this.props.onBlur(e, htmlToText(html))
   },
 
@@ -139,7 +145,7 @@ var PlainEditable = React.createClass({
       e.target.innerHTML = DEFAULT_CONTENTEDITABLE_HTML
     }
     if (this.props.onChange) {
-      var html = normaliseContentEditableHTML(innerHTML)
+      var html = normaliseContentEditableHTML(innerHTML, !this.props.noTrim)
       this.props.onChange(e, htmlToText(html))
     }
   },
@@ -184,6 +190,7 @@ var PlainEditable = React.createClass({
     var {
       autoFocus,
       className, component,
+      noTrim,
       onBlur, onChange, onFocus, onKeyDown, onKeyUp,
       placeholder,
       spellCheck,

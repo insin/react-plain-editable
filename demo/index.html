@@ -13,6 +13,11 @@
     max-width: 960px;
     margin: 0 auto;
   }
+  * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
   .wrap {
     border: 1px solid;
   }
@@ -37,6 +42,36 @@
     margin-top: 20px;
     text-align: center;
   }
+
+  .container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .row {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+  .col {
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    float: left;
+    width: 33.33333333%;
+  }
+  .container:before,
+  .container:after,
+  .row:before,
+  .row:after {
+    content: " ";
+    display: table;
+  }
+  .container:after,
+  .row:after {
+    clear: both;
+  }
   </style>
 </head>
 <body>
@@ -46,17 +81,23 @@
 var App = React.createClass({
   getInitialState() {
     return {
-      blurValue: '',
-      changeValue: ''
+      defaultOptionsBlurValue: '',
+      defaultOptionsChangeValue: '',
+      noTrimBlurValue: '',
+      noTrimChangeValue: ''
     }
   },
 
   _onBlur(e, blurValue) {
-    this.setState({blurValue})
+    var change = {}
+    change[`${e.target.id}BlurValue`] = blurValue
+    this.setState(change)
   },
 
   _onChange(e, changeValue) {
-    this.setState({changeValue})
+    var change = {}
+    change[`${e.target.id}ChangeValue`] = changeValue
+    this.setState(change)
   },
 
   render() {
@@ -83,7 +124,8 @@ var App = React.createClass({
           </p>
         </li>
         <li><p>
-          Leading &amp; trailing whitespace is trimmed.
+          Leading &amp; trailing whitespace is trimmed by default - disable this by passing a
+          <code>noTrim</code> prop.
         </p></li>
         <li><p>
           If a <code>placeholder</code> prop is provided, text in the <code>contentEditable</code>
@@ -110,30 +152,73 @@ var App = React.createClass({
         </p></li>
       </ul>
 
-      <h3>Demo</h3>
-      <label><code>&lt;PlainEditable value="One\n\nTwo\n\nThree"
-  onBlur={'{this._onBlur}'} onChange={'{this._onChange}'}&gt;</code></label>
-      <div className="wrap">
-        <PlainEditable
-          onBlur={this._onBlur}
-          onChange={this._onChange}
-          value={'One\n\nTwo\n\nThree'}
-        />
+      <h3>Demo - Default Options</h3>
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <label><code>&lt;PlainEditable&gt;</code></label>
+          </div>
+          <div className="col">
+             <label><code>onBlur(event, value)</code></label>
+          </div>
+          <div className="col">
+            <label><code>onChange(event, value)</code></label>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <div className="wrap">
+              <PlainEditable
+                id="defaultOptions"
+                onBlur={this._onBlur}
+                onChange={this._onChange}
+                value={'One\n\nTwo\n\nThree'}
+              />
+            </div>
+            <label><code>&lt;/PlainEditable&gt;</code></label>
+          </div>
+          <div className="col">
+            <div className="valueWrap">{this.state.defaultOptionsBlurValue}</div>
+          </div>
+          <div className="col">
+            <div className="valueWrap">{this.state.defaultOptionsChangeValue}</div>
+          </div>
+        </div>
       </div>
-      <label><code>&lt;/PlainEditable&gt;</code></label>
 
-      <br/>
-
-      <div>
-        <label><code>onBlur(event, value)</code></label>
-        <div className="valueWrap">{this.state.blurValue}</div>
-      </div>
-
-      <br/>
-
-      <div>
-        <label><code>onChange(event, value)</code></label>
-        <div className="valueWrap">{this.state.changeValue}</div>
+      <h3>Demo - Disable Trimming</h3>
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <label><code>&lt;PlainEditable noTrim&gt;</code></label>
+          </div>
+          <div className="col">
+             <label><code>onBlur(event, value)</code></label>
+          </div>
+          <div className="col">
+            <label><code>onChange(event, value)</code></label>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <div className="wrap">
+              <PlainEditable
+                id="noTrim"
+                noTrim
+                onBlur={this._onBlur}
+                onChange={this._onChange}
+                value={'One\n\nTwo\n\nThree'}
+              />
+            </div>
+            <label><code>&lt;/PlainEditable&gt;</code></label>
+          </div>
+          <div className="col">
+            <div className="valueWrap">{this.state.noTrimBlurValue}</div>
+          </div>
+          <div className="col">
+            <div className="valueWrap">{this.state.noTrimChangeValue}</div>
+          </div>
+        </div>
       </div>
 
       <footer><a href="https://github.com/insin/react-plain-editable">Source on GitHub</a></footer>

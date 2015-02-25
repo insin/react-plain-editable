@@ -114,6 +114,15 @@ If `true` when the component mounts, the `contentEditable` will be given focus.
 
 An additional CSS class to append to the default `PlainEditable` CSS class.
 
+##### `noTrim: Boolean`
+
+Pass this prop to disable trimming of leading and trailing whitespace in text
+passed to the `onBlur` and `onChange` callbacks.
+
+```html
+<PlainEditable onBlur={this._onBlur} noTrim/>
+```
+
 ##### `component: String|ReactCompositeComponent` (default: `'div'`)
 
 The HTML tag name or React component to be created for use as a

@@ -1,5 +1,8 @@
 ## master
 
+Added a `noTrim` boolean prop to disable trimming of leading and trailing
+whitespace in text passed to the `onBlur` and `onChange` callbacks.
+
 **Breaking change:** replaced `html` prop with `value` prop.
 
 Plain text should be passed for the new `value` prop.
