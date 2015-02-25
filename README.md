@@ -1,7 +1,7 @@
 # react-plain-editable
 
 A `PlainEditable` [React](http://facebook.github.io/react) component which uses
-`contentEditable` to edit plain(ish) text.
+`contentEditable` to edit plain text.
 
 **Note:** `contentEditable` seems like an inconsistent mess across browsers and
 this has only been tested in the latest stable Firefox (35), Chrome (40) and
@@ -38,17 +38,17 @@ You can find it in the [/dist directory](https://github.com/insin/react-plain-ed
 ## Usage
 
 Provide `PlainEditable` with at least an `onBlur` or an `onChange` callback
-function to get HTML contents back at the desired time, and provide any initial
-contents as an `html` prop.
+function to get input data back at the desired time, and provide any initial
+value as a `value` prop.
 
 ```html
 var Editor = React.createClass({
-  _onBlur(e, html) {
-    this.props.onChange(html)
+  _onBlur(e, value) {
+    this.props.onChange(value)
   },
 
   render() {
-    <PlainEditable onBlur={this._onBlur} html={this.props.html}/>
+    <PlainEditable onBlur={this._onBlur} value={this.props.value}/>
   }
 })
 ```
@@ -68,29 +68,43 @@ same visual effect as a `<br>`:
 ### `PlainEditable` component
 
 `PlainEditable` is implemented as an "uncontrolled" component which uses
-`contentEditable` - i.e. changes to the initial `html` prop passed to it will not
-be reflected.
+`contentEditable` to edit a given value - i.e. changes to the initial `value`
+prop passed to it will not be reflected.
 
-When providing input data via its `onBlur` and `onChange` callbacks, it creates
-a normalised representation of its `innerHTML` which uses `<br>` for linebreaks
-and strips all other HTML tags.
+It expects to be given a plain text value and will provide edited input back as
+plain text via its `onBlur` and `onChange` callbacks.
 
-It's described as plain(ish) because the return value is expected to be usable
-directly in a `contentEditable` again later, so isn't quite plain text. In
-addition to the `<br>` tags used for linebreaks, any encoded entities present
-such as `&nbsp;` and `&amp;` are retained.
+Leading & trailing whitespance is trimmed in the returned text.
 
-Leading & trailing whitespance and HTML which would cause whitespace is trimmed
-in the normalised HTML.
-
-The component attempts to work around collapsing of empty `contentEditable`s by
-various browsers, but bugs are likely due to the nature of how `contentEditable`
-has been implemented across various browsers.
+The component attempts to work around the most obvious `contentEditable` quirks,
+but bugs are likely due to the nature of how `contentEditable` has been
+implemented across various browsers.
 
 #### Props
 
 *Any props passed in addition to those documented below will be passed to the
 component created in `PlainEditable`'s `render()` method.*
+
+##### `value: String`
+
+Initial value to be displayed in the `contentEditable`.
+
+`PlainEditable` is currently implemented as an "uncontrolled" component - i.e.
+changes to the initial `value` prop given to it will not be reflected in the
+`contentEditable`.
+
+##### `onBlur: Function(event: SyntheticEvent, value: String)`
+##### `onChange: Function(event: SyntheticEvent, value: String)`
+
+These callback props are used to receive edited values from the
+`contentEditable` via the `value` argument when the appropriate event fires.
+
+If `onChange` is given, the `input` event is used to trigger the callback on
+every change.
+
+Since Internet Explorer doesn't currently support `input` on `contentEditable`s,
+the `keydown` and `keyup` events are used to trigger the `onChange` callback for
+it instead.
 
 ##### `autoFocus: Boolean`
 
@@ -104,27 +118,6 @@ An additional CSS class to append to the default `PlainEditable` CSS class.
 
 The HTML tag name or React component to be created for use as a
 `contentEditable` in `PlainEditable`'s `render()` method.
-
-##### `html: String`
-
-Initial HTML to be displayed in the `contentEditable`.
-
-`PlainEditable` is currently implemented as an "uncontrolled" component - i.e.
-changes to the initial `html` prop given to it will not be reflected in the
-`contentEditable`.
-
-##### `onBlur: Function(event: SyntheticEvent, html: String)`
-##### `onChange: Function(event: SyntheticEvent, html: String)`
-
-These callback props are used to receive normalised HTML contents from the
-`contentEditable` via the `html` argument when the appropriate event fires.
-
-If `onChange` is given, the `input` event is used to trigger the callback on
-every change.
-
-Since Internet Explorer doesn't currently support `input` on `contentEditable`s,
-the `keydown` and `keyup` events are used to trigger the `onChange` callback for
-it instead.
 
 ##### `onFocus: Function(event: SyntheticEvent, selecting: Boolean)`
 

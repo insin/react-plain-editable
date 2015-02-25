@@ -30,6 +30,7 @@
   .valueWrap {
     border: 1px solid;
     min-height: 1em;
+    white-space: pre-wrap;
   }
 
   footer {
@@ -118,12 +119,12 @@ var App = React.createClass({
 
       <h3>Demo</h3>
       <label><code>&lt;PlainEditable
-  onBlur={'{this._onBlur}'} onChange={'{this._onChange}'} html="One&lt;br&gt;&lt;br&gt;Two&lt;br&gt;&lt;br&gt;Three"&gt;</code></label>
+  onBlur={'{this._onBlur}'} onChange={'{this._onChange}'} html="One\n\nTwo\n\nThree"&gt;</code></label>
       <div className="wrap">
         <PlainEditable
           onBlur={this._onBlur}
           onChange={this._onChange}
-          html="One<br><br>Two<br><br>Three"
+          html={'One\n\nTwo\n\nThree'}
         />
       </div>
       <label><code>&lt;/PlainEditable&gt;</code></label>

@@ -2,46 +2,35 @@
 
 var React = require('react')
 
-var isIE = (typeof window !== 'undefined' && 'ActiveXObject' in window)
-
-// Chrome 40 not wrapping first line when wrapping with block elements
-var initialBreaks = /^([^<]+)(?:<div[^>]*><br[^>]*><\/div><div[^>]*>|<p[^>]*><br[^>]*><\/p><p[^>]*>)/
-var initialBreak = /^([^<]+)(?:<div[^>]*>|<p[^>]*>)/
-
-var wrappedBreaks = /<p[^>]*><br[^>]*><\/p>|<div[^>]*><br[^>]*><\/div>/g
-var openBreaks = /<(?:p|div)[^>]*>/g
-var breaks = /<br[^>]*><\/(?:p|div)>|<br[^>]*>|<\/(?:p|div)>/g
-var allTags = /<\/?[^>]+>\s*/g
-var newlines = /\r\n|\n|\r/g
-
-// Leading and trailing whitespace, <br>s & &nbsp;s
-var trimWhitespace = /^(?:\s|&nbsp;|<br[^>]*>)*|(?:\s|&nbsp;|<br[^>]*>)*$/g
-
 var DEFAULT_CONTENTEDITABLE_HTML = '<div><br></div>'
 
-function returnHTML(html) {
-  if (html == DEFAULT_CONTENTEDITABLE_HTML) {
-    return ''
-  }
-  return html
-}
+var isIE = (typeof window !== 'undefined' && 'ActiveXObject' in window)
 
-/**
- * Normalises contentEditable innerHTML, stripping all tags except <br> and
- * trimming leading and trailing whitespace and causes of whitespace. The
- * resulting normalised HTML uses <br> for linebreaks.
- */
-function normaliseContentEditableHTML(html) {
-  html = html.replace(initialBreaks, '$1\n\n')
-             .replace(initialBreak, '$1\n')
-             .replace(wrappedBreaks, '\n')
-             .replace(openBreaks, '')
-             .replace(breaks, '\n')
-             .replace(allTags, '')
-             .replace(newlines, '<br>')
-             .replace(trimWhitespace, '')
-  return html || DEFAULT_CONTENTEDITABLE_HTML
-}
+// =================================================================== Utils ===
+
+var escapeHTML = (() => {
+  var escapeRE = /[&><\u00A0]/g
+  var escapes = {'&': '&amp;', '>': '&gt;', '<': '&lt;', '\u00A0': '&nbsp;'}
+  var escaper = (match) => escapes[match]
+  return (text) => text.replace(escapeRE, escaper)
+})()
+
+var unescapeHTML = (() => {
+  var unescapeRE = /&(?:amp|gt|lt|nbsp);/g
+  var unescapes = {'&amp;': '&', '&gt;': '>', '&lt;': '<', '&nbsp;': '\u00A0'}
+  var unescaper = (match) => unescapes[match]
+  return (text) => text.replace(unescapeRE, unescaper)
+})()
+
+var linebreaksToBr = (() => {
+  var linebreaksRE = /\r\n|\r|\n/g
+  return (text) => text.replace(linebreaksRE, '<br>')
+})()
+
+var brsToLinebreak = (() => {
+  var brRE = /<br>/g
+  return (text) => text.replace(brRE, '\n')
+})()
 
 function selectElementText(el) {
   setTimeout(function() {
@@ -61,12 +50,57 @@ function selectElementText(el) {
   }, 1)
 }
 
+function htmlToText(html) {
+  if (html == DEFAULT_CONTENTEDITABLE_HTML) {
+    return ''
+  }
+  return unescapeHTML(brsToLinebreak(html))
+}
+
+function textToHTML(text) {
+  return linebreaksToBr(escapeHTML(text))
+}
+
+// ====================================================== HTML normalisation ===
+
+// Chrome 40 not wrapping first line when wrapping with block elements
+var initialBreaks = /^([^<]+)(?:<div[^>]*><br[^>]*><\/div><div[^>]*>|<p[^>]*><br[^>]*><\/p><p[^>]*>)/
+var initialBreak = /^([^<]+)(?:<div[^>]*>|<p[^>]*>)/
+
+var wrappedBreaks = /<p[^>]*><br[^>]*><\/p>|<div[^>]*><br[^>]*><\/div>/g
+var openBreaks = /<(?:p|div)[^>]*>/g
+var breaks = /<br[^>]*><\/(?:p|div)>|<br[^>]*>|<\/(?:p|div)>/g
+var allTags = /<\/?[^>]+>\s*/g
+var newlines = /\r\n|\n|\r/g
+
+// Leading and trailing whitespace, <br>s & &nbsp;s
+var trimWhitespace = /^(?:\s|&nbsp;|<br[^>]*>)*|(?:\s|&nbsp;|<br[^>]*>)*$/g
+
+/**
+ * Normalises contentEditable innerHTML, stripping all tags except <br> and
+ * trimming leading and trailing whitespace and causes of whitespace. The
+ * resulting normalised HTML uses <br> for linebreaks.
+ */
+function normaliseContentEditableHTML(html) {
+  html = html.replace(initialBreaks, '$1\n\n')
+             .replace(initialBreak, '$1\n')
+             .replace(wrappedBreaks, '\n')
+             .replace(openBreaks, '')
+             .replace(breaks, '\n')
+             .replace(allTags, '')
+             .replace(newlines, '<br>')
+             .replace(trimWhitespace, '')
+  return html || DEFAULT_CONTENTEDITABLE_HTML
+}
+
+// =============================================================== Component ===
+
 var PlainEditable = React.createClass({
   propTypes: {
     autoFocus: React.PropTypes.bool,
     className: React.PropTypes.string,
     component: React.PropTypes.any,
-    html: React.PropTypes.string,
+    value: React.PropTypes.string,
     onBlur: React.PropTypes.func,
     onChange: React.PropTypes.func,
     onFocus: React.PropTypes.func,
@@ -78,9 +112,9 @@ var PlainEditable = React.createClass({
   getDefaultProps() {
     return {
       component: 'div',
-      html: DEFAULT_CONTENTEDITABLE_HTML,
       placeholder: '',
-      spellCheck: 'false'
+      spellCheck: 'false',
+      value: ''
     }
   },
 
@@ -96,7 +130,7 @@ var PlainEditable = React.createClass({
 
   _onBlur(e) {
     var html = normaliseContentEditableHTML(e.target.innerHTML)
-    this.props.onBlur(e, returnHTML(html))
+    this.props.onBlur(e, htmlToText(html))
   },
 
   _onInput(e) {
@@ -106,7 +140,7 @@ var PlainEditable = React.createClass({
     }
     if (this.props.onChange) {
       var html = normaliseContentEditableHTML(innerHTML)
-      this.props.onChange(e, returnHTML(html))
+      this.props.onChange(e, htmlToText(html))
     }
   },
 
@@ -150,17 +184,20 @@ var PlainEditable = React.createClass({
     var {
       autoFocus,
       className, component,
-      html,
       onBlur, onChange, onFocus, onKeyDown, onKeyUp,
       placeholder,
       spellCheck,
+      value,
       ...props
     } = this.props
+
+    var html = value ? textToHTML(value) : DEFAULT_CONTENTEDITABLE_HTML
+
     return <this.props.component
       {...props}
       className={'PlainEditable' + (className ? ' ' + className : '')}
       contentEditable
-      dangerouslySetInnerHTML={{__html: html || DEFAULT_CONTENTEDITABLE_HTML}}
+      dangerouslySetInnerHTML={{__html: html}}
       onBlur={onBlur && this._onBlur}
       onInput={this._onInput}
       onFocus={(onFocus || placeholder) && this._onFocus}
