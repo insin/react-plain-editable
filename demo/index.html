@@ -80,7 +80,11 @@
 
 var App = React.createClass({
   getInitialState() {
-    return {}
+    return {
+      defaultOptionsBlurValue: 'One\n\nTwo\n\nThree',
+      noTrimBlurValue: 'One\n\nTwo\n\nThree',
+      singleLineBlurValue: 'One\n\nTwo\n\nThree'
+    }
   },
 
   _onBlur(e, blurValue) {
@@ -143,6 +147,20 @@ var App = React.createClass({
           <p>You must set up some CSS to make paragraphs act like linebreaks in Internet Explorer:</p>
           <pre><code>{'.PlainEditable p { margin: 0; }'}</code></pre>
         </li>
+        <li>
+          <p>
+            <code>PlainEditable</code> doesn't attempt to convert the contents of
+            the <code>contentEditable</code> itself to match the plain text values it returns - if
+            you paste rich text or multiple lines they will be displayed as-is.
+          </p>
+          <p>
+            You can bodge this conversion yourself by updating the <code>value</code> prop you pass
+            the component after an <code>onBlur()</code>, since this won't cause cursor jumping.
+          </p>
+          <p>
+            All the demo <code>PlainEditable</code> components below implement this workaround.
+          </p>
+        </li>
         <li><p>
           <code>contentEditable</code> is an inconsistent mess across browsers and this has only been
           tested in the latest stable Firefox (35), Chrome (40) and Internet Explorer (11) with
@@ -172,7 +190,7 @@ var App = React.createClass({
                 id="defaultOptions"
                 onBlur={this._onBlur}
                 onChange={this._onChange}
-                value={'One\n\nTwo\n\nThree'}
+                value={this.state.defaultOptionsBlurValue}
               />
             </div>
           </div>
@@ -206,7 +224,7 @@ var App = React.createClass({
                 noTrim
                 onBlur={this._onBlur}
                 onChange={this._onChange}
-                value={'One\n\nTwo\n\nThree'}
+                value={this.state.noTrimBlurValue}
               />
             </div>
           </div>
@@ -240,7 +258,7 @@ var App = React.createClass({
                 singleLine
                 onBlur={this._onBlur}
                 onChange={this._onChange}
-                value={'One\n\nTwo\n\nThree'}
+                value={this.state.singleLineBlurValue}
               />
             </div>
           </div>
