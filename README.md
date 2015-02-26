@@ -74,7 +74,11 @@ prop passed to it will not be reflected.
 It expects to be given a plain text value and will provide edited input back as
 plain text via its `onBlur` and `onChange` callbacks.
 
-Leading & trailing whitespance is trimmed in the returned text.
+Leading & trailing whitespance is trimmed in the returned text by default. This
+can be disabled by using the `noTrim` prop.
+
+Multi-line editing is enabled by default. You can restrict editing to a single
+line by using the `singleLine` prop.
 
 The component attempts to work around the most obvious `contentEditable` quirks,
 but bugs are likely due to the nature of how `contentEditable` has been
@@ -82,8 +86,10 @@ implemented across various browsers.
 
 #### Props
 
-*Any props passed in addition to those documented below will be passed to the
-component created in `PlainEditable`'s `render()` method.*
+*Note: any props passed in addition to those documented below will be passed to
+the component created in `PlainEditable`'s `render()` method - if you need to
+give your `contentEditable` and `id`, `data-*` or any other additional props,
+just pass them as you normally would.*
 
 ##### `value: String`
 
