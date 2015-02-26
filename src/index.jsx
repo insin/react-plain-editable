@@ -74,7 +74,7 @@ var initialBreak = /^([^<]+)(?:<div[^>]*>|<p[^>]*>)/
 var wrappedBreaks = /<p[^>]*><br[^>]*><\/p>|<div[^>]*><br[^>]*><\/div>/g
 var openBreaks = /<(?:p|div)[^>]*>/g
 var breaks = /<br[^>]*><\/(?:p|div)>|<br[^>]*>|<\/(?:p|div)>/g
-var allTags = /<\/?[^>]+>\s*/g
+var allTags = /<\/?[^>]+>/g
 var newlines = /\r\n|\n|\r/g
 
 // Leading and trailing whitespace, <br>s & &nbsp;s
