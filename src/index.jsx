@@ -146,14 +146,15 @@ var PlainEditable = React.createClass({
   },
 
   _onInput(e) {
-    var innerHTML = e.target.innerHTML
-    if (!innerHTML) {
+    var html = e.target.innerHTML
+
+    // Don't allow innerHTML to become completely empty - causes shrinkage in FF
+    if (!html) {
       e.target.innerHTML = DEFAULT_CONTENTEDITABLE_HTML
     }
 
-    var html
-    if (innerHTML && (this.props.singleLine || this.props.onChange)) {
-      html = normaliseContentEditableHTML(innerHTML, !this.props.noTrim)
+    if (html && (this.props.singleLine || this.props.onChange)) {
+      html = normaliseContentEditableHTML(html, !this.props.noTrim)
     }
 
     // If we're in single-line mode, replace any linebreaks which were pasted in
