@@ -88,7 +88,7 @@ implemented across various browsers.
 
 *Note: any props passed in addition to those documented below will be passed to
 the component created in `PlainEditable`'s `render()` method - if you need to
-give your `contentEditable` and `id`, `data-*` or any other additional props,
+give your `contentEditable` an `id`, `data-`, or any other additional props,
 just pass them as you normally would.*
 
 ##### `value: String`
