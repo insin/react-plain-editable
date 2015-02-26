@@ -114,6 +114,11 @@ If `true` when the component mounts, the `contentEditable` will be given focus.
 
 An additional CSS class to append to the default `PlainEditable` CSS class.
 
+##### `component: String|ReactCompositeComponent` (default: `'div'`)
+
+The HTML tag name or React component to be created for use as a
+`contentEditable` in `PlainEditable`'s `render()` method.
+
 ##### `noTrim: Boolean`
 
 Pass this prop to disable trimming of leading and trailing whitespace in text
@@ -122,11 +127,6 @@ passed to the `onBlur` and `onChange` callbacks.
 ```html
 <PlainEditable onBlur={this._onBlur} noTrim/>
 ```
-
-##### `component: String|ReactCompositeComponent` (default: `'div'`)
-
-The HTML tag name or React component to be created for use as a
-`contentEditable` in `PlainEditable`'s `render()` method.
 
 ##### `onFocus: Function(event: SyntheticEvent, selecting: Boolean)`
 
@@ -152,6 +152,16 @@ match this prop when it gains focus.
 
 This can be used to make it more convenient for users to edit an initial value
 you provide as a placeholder.
+
+##### `singleLine: Boolean`
+
+Pass this prop to disable entry of linebreaks into the `contentEditable`.
+Pressing the Enter key will force a `blur()` and linebreaks in pasted content
+will be converted to spaces.
+
+```html
+<PlainEditable onBlur={this._onBlur} singleLine/>
+```
 
 ##### `spellcheck: String` (default: `'false'`)
 

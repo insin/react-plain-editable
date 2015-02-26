@@ -1,8 +1,5 @@
 ## master
 
-Added a `noTrim` boolean prop to disable trimming of leading and trailing
-whitespace in text passed to the `onBlur` and `onChange` callbacks.
-
 **Breaking change:** replaced `html` prop with `value` prop.
 
 Plain text should be passed for the new `value` prop.
@@ -30,6 +27,12 @@ Value returned in 2.0.0:
 
 3
 ```
+
+Added a `singleLine` boolean prop to prevent linebreaks being added to the
+`contentEditable`.
+
+Added a `noTrim` boolean prop to disable trimming of leading and trailing
+whitespace in text passed to the `onBlur` and `onChange` callbacks.
 
 ## 1.1.0 / 2015-02-23
 

@@ -80,12 +80,7 @@
 
 var App = React.createClass({
   getInitialState() {
-    return {
-      defaultOptionsBlurValue: '',
-      defaultOptionsChangeValue: '',
-      noTrimBlurValue: '',
-      noTrimChangeValue: ''
-    }
+    return {}
   },
 
   _onBlur(e, blurValue) {
@@ -124,8 +119,12 @@ var App = React.createClass({
           </p>
         </li>
         <li><p>
-          Leading &amp; trailing whitespace is trimmed by default - disable this by passing a
-          <code>noTrim</code> prop.
+          Leading &amp; trailing whitespace is trimmed by default - disable this by passing
+          a <code>noTrim</code> prop.
+        </p></li>
+        <li><p>
+          Linebreaks may be created and pasted in by default - restrict content to a single line
+          by passing a <code>singleLine</code> prop.
         </p></li>
         <li><p>
           If a <code>placeholder</code> prop is provided, text in the <code>contentEditable</code>
@@ -156,7 +155,7 @@ var App = React.createClass({
       <div className="container">
         <div className="row">
           <div className="col">
-            <label><code>&lt;PlainEditable&gt;</code></label>
+            <label><code>&lt;PlainEditable/&gt;</code></label>
           </div>
           <div className="col">
              <label><code>onBlur(event, value)</code></label>
@@ -175,7 +174,6 @@ var App = React.createClass({
                 value={'One\n\nTwo\n\nThree'}
               />
             </div>
-            <label><code>&lt;/PlainEditable&gt;</code></label>
           </div>
           <div className="col">
             <div className="valueWrap">{this.state.defaultOptionsBlurValue}</div>
@@ -190,7 +188,7 @@ var App = React.createClass({
       <div className="container">
         <div className="row">
           <div className="col">
-            <label><code>&lt;PlainEditable noTrim&gt;</code></label>
+            <label><code>&lt;PlainEditable noTrim/&gt;</code></label>
           </div>
           <div className="col">
              <label><code>onBlur(event, value)</code></label>
@@ -210,13 +208,46 @@ var App = React.createClass({
                 value={'One\n\nTwo\n\nThree'}
               />
             </div>
-            <label><code>&lt;/PlainEditable&gt;</code></label>
           </div>
           <div className="col">
             <div className="valueWrap">{this.state.noTrimBlurValue}</div>
           </div>
           <div className="col">
             <div className="valueWrap">{this.state.noTrimChangeValue}</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Demo - Single Line</h3>
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <label><code>&lt;PlainEditable singleLine/&gt;</code></label>
+          </div>
+          <div className="col">
+             <label><code>onBlur(event, value)</code></label>
+          </div>
+          <div className="col">
+            <label><code>onChange(event, value)</code></label>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <div className="wrap">
+              <PlainEditable
+                id="singleLine"
+                singleLine
+                onBlur={this._onBlur}
+                onChange={this._onChange}
+                value={'One\n\nTwo\n\nThree'}
+              />
+            </div>
+          </div>
+          <div className="col">
+            <div className="valueWrap">{this.state.singleLineBlurValue}</div>
+          </div>
+          <div className="col">
+            <div className="valueWrap">{this.state.singleLineChangeValue}</div>
           </div>
         </div>
       </div>

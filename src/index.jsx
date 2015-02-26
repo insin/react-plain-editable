@@ -8,6 +8,9 @@ var isIE = (typeof window !== 'undefined' && 'ActiveXObject' in window)
 
 // =================================================================== Utils ===
 
+var brRE = /<br>/g
+var linebreaksRE = /\r\n|\r|\n/g
+
 var escapeHTML = (() => {
   var escapeRE = /[&><\u00A0]/g
   var escapes = {'&': '&amp;', '>': '&gt;', '<': '&lt;', '\u00A0': '&nbsp;'}
@@ -23,12 +26,10 @@ var unescapeHTML = (() => {
 })()
 
 var linebreaksToBr = (() => {
-  var linebreaksRE = /\r\n|\r|\n/g
   return (text) => text.replace(linebreaksRE, '<br>')
 })()
 
 var brsToLinebreak = (() => {
-  var brRE = /<br>/g
   return (text) => text.replace(brRE, '\n')
 })()
 
@@ -57,7 +58,10 @@ function htmlToText(html) {
   return unescapeHTML(brsToLinebreak(html))
 }
 
-function textToHTML(text) {
+function textToHTML(text, singleLine) {
+  if (singleLine && linebreaksRE.test(text)) {
+    text = text.replace(linebreaksRE, ' ')
+  }
   return linebreaksToBr(escapeHTML(text))
 }
 
@@ -104,14 +108,15 @@ var PlainEditable = React.createClass({
     autoFocus: React.PropTypes.bool,
     className: React.PropTypes.string,
     component: React.PropTypes.any,
-    value: React.PropTypes.string,
     noTrim: React.PropTypes.bool,
     onBlur: React.PropTypes.func,
     onChange: React.PropTypes.func,
     onFocus: React.PropTypes.func,
     onKeyDown: React.PropTypes.func,
     onKeyUp: React.PropTypes.func,
-    placeholder: React.PropTypes.string
+    placeholder: React.PropTypes.string,
+    singleLine: React.PropTypes.bool,
+    value: React.PropTypes.string
   },
 
   getDefaultProps() {
@@ -119,6 +124,7 @@ var PlainEditable = React.createClass({
       component: 'div',
       noTrim: false,
       placeholder: '',
+      singleLine: false,
       spellCheck: 'false',
       value: ''
     }
@@ -144,13 +150,31 @@ var PlainEditable = React.createClass({
     if (!innerHTML) {
       e.target.innerHTML = DEFAULT_CONTENTEDITABLE_HTML
     }
+
+    var html
+    if (innerHTML && (this.props.singleLine || this.props.onChange)) {
+      html = normaliseContentEditableHTML(innerHTML, !this.props.noTrim)
+    }
+
+    // If we're in single-line mode, replace any linebreaks which were pasted in
+    // with spaces.
+    if (html && this.props.singleLine && brRE.test(html)) {
+      html = html.replace(brRE, ' ')
+      e.target.innerHTML = html
+    }
+
     if (this.props.onChange) {
-      var html = normaliseContentEditableHTML(innerHTML, !this.props.noTrim)
       this.props.onChange(e, htmlToText(html))
     }
   },
 
   _onKeyDown(e) {
+    if (this.props.singleLine && e.key == 'Enter') {
+      e.preventDefault()
+      e.target.blur()
+      return
+    }
+
     if (this.props.onKeyDown) {
       this.props.onKeyDown(e)
     }
@@ -193,12 +217,12 @@ var PlainEditable = React.createClass({
       noTrim,
       onBlur, onChange, onFocus, onKeyDown, onKeyUp,
       placeholder,
-      spellCheck,
+      singleLine, spellCheck,
       value,
       ...props
     } = this.props
 
-    var html = value ? textToHTML(value) : DEFAULT_CONTENTEDITABLE_HTML
+    var html = value ? textToHTML(value, singleLine) : DEFAULT_CONTENTEDITABLE_HTML
 
     return <this.props.component
       {...props}
@@ -208,7 +232,7 @@ var PlainEditable = React.createClass({
       onBlur={onBlur && this._onBlur}
       onInput={this._onInput}
       onFocus={(onFocus || placeholder) && this._onFocus}
-      onKeyDown={(onKeyDown || isIE) && this._onKeyDown}
+      onKeyDown={(onKeyDown || singleLine || isIE) && this._onKeyDown}
       onKeyUp={(onKeyUp || isIE) && this._onKeyUp}
       spellCheck={spellCheck}
       style={{minHeight: '1em'}}
