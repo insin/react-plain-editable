@@ -51,6 +51,8 @@ function selectElementText(el) {
   }, 1)
 }
 
+// ====================================================== HTML normalisation ===
+
 function htmlToText(html) {
   if (html == DEFAULT_CONTENTEDITABLE_HTML) {
     return ''
@@ -64,8 +66,6 @@ function textToHTML(text, singleLine) {
   }
   return linebreaksToBr(escapeHTML(text))
 }
-
-// ====================================================== HTML normalisation ===
 
 // Chrome 40 not wrapping first line when wrapping with block elements
 var initialBreaks = /^([^<]+)(?:<div[^>]*><br[^>]*><\/div><div[^>]*>|<p[^>]*><br[^>]*><\/p><p[^>]*>)/

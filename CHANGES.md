@@ -1,4 +1,4 @@
-## master
+## 2.0.0 / 2015-02-26
 
 **Breaking change:** replaced `html` prop with `value` prop.
 
