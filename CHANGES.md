@@ -29,7 +29,8 @@ Value returned in 2.0.0:
 ```
 
 Added a `singleLine` boolean prop to prevent linebreaks being added to the
-`contentEditable`.
+`contentEditable` by pressing Enter. They can still be pasted in, but will be
+replaced with spaces in text passed to the `onBlur` and `onChange` callbacks.
 
 Added a `noTrim` boolean prop to disable trimming of leading and trailing
 whitespace in text passed to the `onBlur` and `onChange` callbacks.

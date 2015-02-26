@@ -161,9 +161,11 @@ you provide as a placeholder.
 
 ##### `singleLine: Boolean`
 
-Pass this prop to disable entry of linebreaks into the `contentEditable`.
-Pressing the Enter key will force a `blur()` and linebreaks in pasted content
-will be converted to spaces.
+Pass this prop to disable entry of linebreaks into the `contentEditable` by
+pressing the Enter key, will force a `blur()`.
+
+Linebreaks can still be pasted in, but will be replaced with spaces in text
+passed to the `onBlur` and `onChange` callbacks.
 
 ```html
 <PlainEditable onBlur={this._onBlur} singleLine/>
