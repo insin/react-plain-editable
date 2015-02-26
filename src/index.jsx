@@ -160,7 +160,6 @@ var PlainEditable = React.createClass({
     // with spaces.
     if (html && this.props.singleLine && brRE.test(html)) {
       html = html.replace(brRE, ' ')
-      e.target.innerHTML = html
     }
 
     if (this.props.onChange) {
