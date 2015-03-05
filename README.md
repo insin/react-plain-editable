@@ -1,3 +1,5 @@
+# [DEPRECATED] This component is unnecessary, use an `<input type="text"/>` or something like [react-textarea-autosize](https://github.com/andreypopp/react-textarea-autosize) with `rows="1"` instead
+
 # react-plain-editable
 
 A `PlainEditable` [React](http://facebook.github.io/react) component which uses
